@@ -89,7 +89,7 @@ export function Hero() {
                  </Link>
 
 <a
-                    href="https://github.com"
+                    href="https://github.com/jenissiezichi/Purge-Backend"
                     className="flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm border transition-colors"
                     style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
                     >
