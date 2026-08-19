@@ -57,13 +57,13 @@ export function Hero() {
                 <motion.h1
                     variants={item}
 
-                    className="text-5xl sm:text-6xl font-bold leading-[1.05] tracking-tight max-w-2xl"
+                    className="text-5xl sm:text-6xl font-bold leading-[1.05] tracking-tight max-w-3xl"
                     style={{
                         fontFamily: "var(--font-display)",
                         color: "var(--text-primary)",
                     }}
                 >
-                    Stop fighting Gmail's spam filters.
+                    You set the rules. Spam doesn't get a vote.
                 </motion.h1>
 
                 <motion.p
@@ -71,8 +71,7 @@ export function Hero() {
                     className="mt-5 text-lg leading-relaxed max-w-4xl font-signature"
                     style={{ color: "var(--text-muted)" }}
                 >
-                    Purge scans your inbox, applies rules you set, and clears out spam
-                    automatically — no digging through Gmail's settings.
+                    Your inbox is drowning in spam. Purge kills it automatically — set your rules once, forget it forever.
                 </motion.p>
 
                 <motion.div variants={item} className="mt-8 flex flex-col sm:flex-row items-center gap-3">
