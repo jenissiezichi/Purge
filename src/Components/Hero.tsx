@@ -1,4 +1,5 @@
 import { motion, type Variants } from 'framer-motion';
+import {Link} from "react-router-dom"
 
 
 export function Hero() {
@@ -75,14 +76,17 @@ export function Hero() {
                 </motion.p>
 
                 <motion.div variants={item} className="mt-8 flex flex-col sm:flex-row items-center gap-3">
-                    <button
-                        className="px-5 py-2.5 rounded-lg font-medium text-sm transition-colors"
-                        style={{ backgroundColor: "var(--primary)", color: "var(--background)" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--primary-hover)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--primary)")}
-                    >
-                        Sign in with Google
-                    </button>
+                 <Link to="/login">
+
+                     <button
+                         className="px-5 py-2.5 rounded-lg font-medium text-sm transition-colors"
+                         style={{ backgroundColor: "var(--primary)", color: "var(--background)" }}
+                         onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--primary-hover)")}
+                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--primary)")}
+                     >
+                         Sign in with Google
+                     </button>
+                 </Link>
 
 <a
                     href="https://github.com"
