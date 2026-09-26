@@ -8,6 +8,7 @@ import { Routes, Route } from "react-router-dom"
 import {Rules} from "@/Pages/Rules.tsx"
 import {DashboardLayout} from "@/Pages/DashboardLayout.tsx";
 import {Settings} from "@/Pages/Setting.tsx";
+import {ProtectedRoute} from "@/api/ProtectedRoute.tsx";
 
 function App() {
   return (
@@ -31,11 +32,13 @@ function App() {
           />
         <Routes>
           <Route path="/" element={<Landing />} />
+            <Route element={<ProtectedRoute/>}>
             <Route element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/rules" element={<Rules />} />
                 <Route path="/settings" element={<Settings/>} />
             </Route>
+      </Route>
           <Route path="/login" element={<LoginPage />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>

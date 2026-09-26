@@ -3,9 +3,16 @@ import {LogIn, ArrowLeft, ShieldCheck} from "lucide-react"
 import { Link } from "react-router-dom"
 import {api} from "@/api/axios.ts"
 import {useState} from "react";
+import {Navigate} from "react-router-dom"
+import {useAuth} from "@/hooks/useAuth.ts"
 
 export function LoginPage() {
     const [loading, setLoading] = useState<boolean>(false)
+
+    const {isAuthenticated} = useAuth()
+    if (isAuthenticated) {
+        return <Navigate to="/dashboard" replace />
+    }
 
     const handleGoogleLogin = async () => {
         setLoading(true)
