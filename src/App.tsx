@@ -9,6 +9,7 @@ import {Rules} from "@/Pages/Rules.tsx"
 import {DashboardLayout} from "@/Pages/DashboardLayout.tsx";
 import {Settings} from "@/Pages/Setting.tsx";
 import {ProtectedRoute} from "@/api/ProtectedRoute.tsx";
+import {LogsPage} from "@/Pages/Logs.tsx";
 
 function App() {
   return (
@@ -37,8 +38,10 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/rules" element={<Rules />} />
                 <Route path="/settings" element={<Settings/>} />
+                <Route path="/logs" element={<LogsPage/>}/>
             </Route>
       </Route>
+            <Route path="*" element={<Landing />} />
           <Route path="/login" element={<LoginPage />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>

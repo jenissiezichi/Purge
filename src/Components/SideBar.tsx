@@ -84,6 +84,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 onClick={onClose}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                                 style={{
+                                    fontFamily: "var(--font-display)",
                                     backgroundColor: isActive ? "var(--background)" : "transparent",
                                     color: isActive ? "var(--accent)" : "var(--text-muted)",
                                 }}

@@ -6,6 +6,7 @@ const FULL_DELETE_SCOPE = "https://mail.google.com/"
 interface AccountInfo {
     email: string
     scopes: string[]
+    permanent_delete_enabled: boolean
 }
 
 export function useAccount() {
@@ -27,7 +28,8 @@ export function useAccount() {
         fetchAccount()
     }, [fetchAccount])
 
-    const hasFullDeleteAccess = account?.scopes.includes(FULL_DELETE_SCOPE) ?? false
+    const hasFullDeleteScope = account?.scopes.includes(FULL_DELETE_SCOPE) ?? false
+    const hasFullDeleteAccess = hasFullDeleteScope && (account?.permanent_delete_enabled ?? true)
 
-    return { account, isLoading, hasFullDeleteAccess, refetch: fetchAccount }
+    return { account, isLoading, hasFullDeleteAccess, hasFullDeleteScope, refetch: fetchAccount }
 }

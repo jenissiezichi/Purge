@@ -14,8 +14,9 @@ const SCOPE_LABELS: Record<string, string> = {
 }
 
 export function Settings() {
-    const { account, isLoading, hasFullDeleteAccess } = useAccount()
+    const { account, isLoading, hasFullDeleteAccess, hasFullDeleteScope, refetch } = useAccount()
     const [isUpgrading, setIsUpgrading] = useState(false)
+    const [isToggling, setIsToggling] = useState(false)
     const navigate = useNavigate()
 
     const handleUpgrade = async () => {
@@ -27,6 +28,20 @@ export function Settings() {
             console.error("Failed to start upgrade flow", err)
             toast.error("Couldn't start the upgrade. Try again.")
             setIsUpgrading(false)
+        }
+    }
+
+    const handleToggle = async (turnOn: boolean) => {
+        setIsToggling(true)
+        try {
+            await api.post(`/api/permanent-delete/${turnOn ? "on" : "off"}`)
+            await refetch()
+            toast.success(turnOn ? "Permanent delete turned on" : "Permanent delete turned off")
+        } catch (err) {
+            console.error("Failed to update permanent delete", err)
+            toast.error("Couldn't update the setting. Try again.")
+        } finally {
+            setIsToggling(false)
         }
     }
 
@@ -42,7 +57,6 @@ export function Settings() {
                 Settings
             </h1>
 
-            {/* Account info */}
             <div
                 className="p-5 rounded-xl border mb-4"
                 style={{ borderColor: "var(--border)", backgroundColor: "var(--surface)" }}
@@ -107,12 +121,14 @@ export function Settings() {
                         <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
                             {hasFullDeleteAccess
                                 ? "Enabled — you can permanently delete messages, not just move them to trash."
-                                : "Not enabled — Purge can only move spam to trash, which Gmail auto-clears after 30 days."}
+                                : hasFullDeleteScope
+                                    ? "Turned off — Purge won't permanently delete anything. Google still holds this permission until you remove Purge at myaccount.google.com/permissions."
+                                    : "Not enabled — Purge can only move spam to trash, which Gmail auto-clears after 30 days."}
                         </p>
                     </div>
                 </div>
 
-                {!hasFullDeleteAccess && (
+                {!hasFullDeleteScope ? (
                     <button
                         onClick={handleUpgrade}
                         disabled={isUpgrading}
@@ -121,13 +137,22 @@ export function Settings() {
                     >
                         {isUpgrading ? "Redirecting..." : "Enable permanent delete"}
                     </button>
+                ) : (
+                    <button
+                        onClick={() => handleToggle(!hasFullDeleteAccess)}
+                        disabled={isToggling}
+                        className="cursor-pointer px-4 py-2 rounded-lg text-sm font-semibold font-signature border transition-colors disabled:opacity-60"
+                        style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
+                    >
+                        {isToggling ? "Saving..." : hasFullDeleteAccess ? "Turn off permanent delete" : "Turn on permanent delete"}
+                    </button>
                 )}
             </div>
 
 
             <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-colors"
+                className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-colors"
                 style={{ borderColor: "var(--border)", color: "var(--primary)" }}
             >
                 <LogOut size={14} />

@@ -48,7 +48,8 @@ export function ActivityFeed({ activity, isLoading }: { activity: ActivityEntry[
                             </div>
                             <div>
                                 <p className="text-sm" style={{ color: "var(--text-primary)" }}>
-                                    Moved {entry.count} message{entry.count > 1 ? "s" : ""} to trash
+                                    {entry.action === "auto-trashed" ? "Auto-trashed" : "Moved"}
+                                    {entry.count} message{entry.count > 1 ? "s" : ""}{entry.action === "auto-trashed" ? "" : " to trash"}
                                 </p>
                                 <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
                                     {timeAgo(entry.timestamp)}
