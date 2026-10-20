@@ -15,8 +15,8 @@ export function Footer() {
 
     const socials: SocialLink[] = [
         { label: "GitHub", href: "https://github.com/jenissiezichi", icon: <GithubIcon /> },
-        { label: "LinkedIn", href: "https://linkedin.com/in/YOUR_HANDLE", icon: <Link size={16} /> },
-        { label: "WhatsApp", href: "https://wa.me/YOUR_NUMBER", icon: <MessageCircle size={16} /> },
+        { label: "LinkedIn", href: "https://www.linkedin.com/in/ezichijenissi", icon: <Link size={16} /> },
+        { label: "WhatsApp", href: "https://wa.me/2347069632334", icon: <MessageCircle size={16} /> },
 
     ]
     return (
@@ -37,7 +37,7 @@ export function Footer() {
 
                 <div className="flex items-center gap-6">
 <a
-                    href="https://github.com"
+                    href="https://github.com/jenissiezichi"
                     className="flex items-center gap-1.5 text-sm transition-colors"
                     style={{ color: "var(--text-muted)" }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
