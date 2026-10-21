@@ -1,7 +1,9 @@
-import { Trash2, ListFilter,Plus } from "lucide-react"
+import { Trash2, ListFilter,Plus,X } from "lucide-react"
 import { useEffect, useState, useCallback } from "react"
 import { api } from "@/api/axios.ts"
 import {toast} from "sonner";
+import type {ReactNode} from "react";
+
 
 
 interface Rule {
@@ -43,12 +45,37 @@ function useRules() {
     return { rules, isLoading, addRule, removeRule }
 }
 
+function RuleChip({ label, onRemove }: { label: string; onRemove: () => void }) {
+    return (
+        <span
+            className="inline-flex max-w-full items-center gap-1.5 pl-3 pr-2 py-1 rounded-full border text-sm break-all"
+            style={{ borderColor: "var(--border)", backgroundColor: "var(--background)", color: "var(--text-primary)" }}
+        >
+            {label}
+            <button onClick={onRemove} aria-label={`Delete rule ${label}`} style={{ color: "var(--text-muted)" }}>
+                <X size={14} />
+            </button>
+        </span>
+    )
+}
+
+function RuleGroup({ title, children }: { title: string; children: ReactNode }) {
+    return (
+        <div>
+            <p className="text-xs font-semibold mb-2 uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+                {title}
+            </p>
+            <div className="flex flex-wrap gap-2">{children}</div>
+        </div>
+    )
+}
+
 export function Rules() {
     const { rules, isLoading, addRule, removeRule } = useRules()
     const [keyword, setKeyword] = useState("")
     const [senderContains, setSenderContains] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
-
+    const [search, setSearch] = useState("")
 
     const handleAddRule = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -69,6 +96,13 @@ export function Rules() {
             setIsSubmitting(false)
         }
     }
+    const query = search.trim().toLowerCase()
+    const visibleRules = rules.filter((r) =>
+        `${r.keyword ?? ""} ${r.sender_contains ?? ""}`.toLowerCase().includes(query)
+    )
+    const keywordRules = visibleRules.filter((r) => r.keyword && !r.sender_contains)
+    const senderRules = visibleRules.filter((r) => r.sender_contains && !r.keyword)
+    const combinedRules = visibleRules.filter((r) => r.keyword && r.sender_contains)
 
     return (
         <div className="p-8">
@@ -107,7 +141,19 @@ export function Rules() {
                     {isSubmitting ? "Adding..." : "Add Rule"}
                 </button>
             </form>
-
+            <div className="flex items-center gap-3 mb-3">
+                <input
+                    type="text"
+                    placeholder="Search rules..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="flex-1 px-3 py-2 rounded-lg text-sm border outline-none"
+                    style={{ borderColor: "var(--border)", backgroundColor: "var(--surface)", color: "var(--text-primary)" }}
+                />
+                <span className="text-sm shrink-0" style={{ color: "var(--text-muted)" }}>
+        {query ? `${visibleRules.length} of ${rules.length}` : `${rules.length} rule${rules.length !== 1 ? "s" : ""}`}
+    </span>
+            </div>
             <div
                 className="rounded-xl border overflow-hidden"
                 style={{ borderColor: "var(--border)", backgroundColor: "var(--surface)" }}
@@ -123,33 +169,34 @@ export function Rules() {
                             No rules yet. Add one to start catching spam automatically.
                         </p>
                     </div>
+                ) : visibleRules.length === 0 ? (
+                    <p className="p-6 text-sm" style={{ color: "var(--text-muted)" }}>
+                        No rules match "{search}".
+                    </p>
                 ) : (
-                    <ul>
-                        {rules.map((rule) => (
-                            <li
-                                key={rule.id}
-                                className="flex items-center justify-between px-5 py-4 border-b last:border-0"
-                                style={{ borderColor: "var(--border)" }}
-                            >
-                                <div className="text-sm" style={{ color: "var(--text-primary)" }}>
-                                    {rule.keyword && (
-                                        <span>
-                      Keyword contains <strong>"{rule.keyword}"</strong>
-                    </span>
-                                    )}
-                                    {rule.keyword && rule.sender_contains && <span> and </span>}
-                                    {rule.sender_contains && (
-                                        <span>
-                      Sender contains <strong>"{rule.sender_contains}"</strong>
-                    </span>
-                                    )}
-                                </div>
-                                <button onClick={() => removeRule(rule.id)} style={{ color: "var(--text-muted)" }}>
-                                    <Trash2 size={16} />
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+                    <div className="p-5 flex flex-col gap-5">
+                        {keywordRules.length > 0 && (
+                            <RuleGroup title="Keywords (subject)">
+                                {keywordRules.map((r) => (
+                                    <RuleChip key={r.id} label={r.keyword ?? ""} onRemove={() => removeRule(r.id)} />
+                                ))}
+                            </RuleGroup>
+                        )}
+                        {senderRules.length > 0 && (
+                            <RuleGroup title="Senders">
+                                {senderRules.map((r) => (
+                                    <RuleChip key={r.id} label={r.sender_contains ?? ""} onRemove={() => removeRule(r.id)} />
+                                ))}
+                            </RuleGroup>
+                        )}
+                        {combinedRules.length > 0 && (
+                            <RuleGroup title="Keyword and sender together">
+                                {combinedRules.map((r) => (
+                                    <RuleChip key={r.id} label={`${r.keyword} + ${r.sender_contains}`} onRemove={() => removeRule(r.id)} />
+                                ))}
+                            </RuleGroup>
+                        )}
+                    </div>
                 )}
             </div>
         </div>
