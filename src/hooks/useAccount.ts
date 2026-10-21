@@ -7,11 +7,13 @@ interface AccountInfo {
     email: string
     scopes: string[]
     permanent_delete_enabled: boolean
+    ai_cleanup_enabled: boolean
 }
 
 export function useAccount() {
     const [account, setAccount] = useState<AccountInfo | null>(null)
     const [isLoading, setIsLoading] = useState(true)
+
 
     const fetchAccount = useCallback(async () => {
         try {
@@ -30,6 +32,7 @@ export function useAccount() {
 
     const hasFullDeleteScope = account?.scopes.includes(FULL_DELETE_SCOPE) ?? false
     const hasFullDeleteAccess = hasFullDeleteScope && (account?.permanent_delete_enabled ?? true)
+    const aiCleanupEnabled = account?.ai_cleanup_enabled ?? true
 
-    return { account, isLoading, hasFullDeleteAccess, hasFullDeleteScope, refetch: fetchAccount }
+    return { account, isLoading, hasFullDeleteAccess, aiCleanupEnabled, hasFullDeleteScope, refetch: fetchAccount }
 }

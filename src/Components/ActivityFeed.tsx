@@ -1,4 +1,5 @@
-import { Trash2 } from "lucide-react"
+import { Trash2, Zap, Sparkles } from "lucide-react"
+import { Link } from "react-router-dom"
 
 interface ActivityEntry {
     email: string
@@ -17,16 +18,32 @@ function timeAgo(timestamp: string) {
     if (hours < 24) return `${hours}h ago`
     return `${Math.floor(hours / 24)}d ago`
 }
+function getActionMeta(entry: ActivityEntry) {
+    const s = `${entry.count} message${entry.count > 1 ? "s" : ""}`
+    switch (entry.action) {
+        case "auto-trashed":
+            return { Icon: Zap, label: `Nightly scan trashed ${s}` }
+        case "ai-trashed":
+            return { Icon: Sparkles, label: `AI cleanup trashed ${s}` }
+        default:
+            return { Icon: Trash2, label: `You moved ${s} to trash` }
+    }
+}
 
-export function ActivityFeed({ activity, isLoading }: { activity: ActivityEntry[]; isLoading: boolean }) {
+export function ActivityFeed({ activity = [], isLoading }: { activity?: ActivityEntry[]; isLoading: boolean }) {
     return (
         <div
-            className="rounded-xl border p-5 mb-4"
+            className="rounded-xl border p-4 mb-2"
             style={{ borderColor: "var(--border)", backgroundColor: "var(--surface)" }}
         >
-            <h2 className="text-sm font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
-                Recent Activity
-            </h2>
+            <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                    Recent Activity
+                </h2>
+                <Link to="/logs" className="text-xs font-medium" style={{ color: "var(--primary)" }}>
+                    View all
+                </Link>
+            </div>
 
             {isLoading ? (
                 <p className="text-sm" style={{ color: "var(--text-muted)" }}>
@@ -37,26 +54,28 @@ export function ActivityFeed({ activity, isLoading }: { activity: ActivityEntry[
                     No activity yet.
                 </p>
             ) : (
-                <ul className="flex flex-col gap-3">
-                    {activity.map((entry, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                            <div
-                                className="flex items-center justify-center h-7 w-7 rounded-lg shrink-0 mt-0.5"
-                                style={{ backgroundColor: "var(--background)" }}
-                            >
-                                <Trash2 size={13} style={{ color: "var(--primary)" }} />
-                            </div>
-                            <div>
-                                <p className="text-sm" style={{ color: "var(--text-primary)" }}>
-                                    {entry.action === "auto-trashed" ? "Auto-trashed" : "Moved"}
-                                    {entry.count} message{entry.count > 1 ? "s" : ""}{entry.action === "auto-trashed" ? "" : " to trash"}
-                                </p>
-                                <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-                                    {timeAgo(entry.timestamp)}
-                                </p>
-                            </div>
-                        </li>
-                    ))}
+                <ul className="flex flex-col gap-2.5">
+                    {activity.map((entry, i) => {
+                        const { Icon, label } = getActionMeta(entry)
+                        return (
+                            <li key={i} className="flex items-center gap-2.5">
+                                <div
+                                    className="flex items-center justify-center h-6 w-6 rounded-md shrink-0"
+                                    style={{ backgroundColor: "var(--background)" }}
+                                >
+                                    <Icon size={12} style={{ color: "var(--primary)" }} />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-sm truncate" style={{ color: "var(--text-primary)" }}>
+                                        {label}
+                                    </p>
+                                </div>
+                                <span className="text-xs shrink-0" style={{ color: "var(--text-muted)" }}>
+                    {timeAgo(entry.timestamp)}
+                </span>
+                            </li>
+                        )
+                    })}
                 </ul>
             )}
         </div>

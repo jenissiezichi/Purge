@@ -1,5 +1,6 @@
 import {Trash2, Zap} from "lucide-react"
 import {useActivity} from "@/hooks/useActivity.ts";
+import {useState} from "react";
 
 function timeAgo(timestamp: string){
     const diffMS = Date.now() - new Date(timestamp).getTime()
@@ -14,6 +15,7 @@ function timeAgo(timestamp: string){
 
 export function LogsPage() {
     const {activity, isLoading} = useActivity(50)
+    const [visible, setVisible] = useState(9)
 return (
     <div className="p-8">
 <h1 className="text-2xl font-bold mb-6" style={{ color: "var(--text-primary)" }}>
@@ -28,7 +30,7 @@ return (
                 <p className="p-12 text-center text-sm" style={{color: "var(--text-muted)"}}>No activity yet.</p>
             ):(
                 <ul>
-                    {activity.map((entry, i) =>{
+                    {activity.slice(0, visible).map((entry, i) => {
                         const isAuto = entry.action === "auto-trashed";
                         return(
                             <li key={i}
@@ -59,6 +61,15 @@ return (
                         )
                     } )}
                 </ul>
+            )}
+            {visible < activity.length && (
+                <button
+                    onClick={() => setVisible((v) => v + 15)}
+                    className="w-full py-3 text-sm font-medium border-t transition-colors"
+                    style={{ borderColor: "var(--border)", color: "var(--primary)" }}
+                >
+                    Show more ({activity.length - visible} left)
+                </button>
             )}
 
         </div>

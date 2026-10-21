@@ -11,6 +11,31 @@ interface SpamTableProps {
     onToggle: (id: string) => void
     onToggleAll: () => void
 }
+function parseSender(raw: string) {
+    const match = raw.match(/^(.*?)\s*<(.+?)>\s*$/)
+    if (!match) return { name: raw.trim(), address: "" }
+
+    const name = match[1].trim().replace(/^["']+|["']+$/g, "").trim()
+    const address = match[2].trim()
+
+    return { name: name || address, address }
+}
+
+function Sender({ raw }: { raw: string }) {
+    const { name, address } = parseSender(raw)
+    return (
+        <div className="min-w-0" title={raw}>
+            <div className="font-semibold truncate" style={{ color: "var(--text-primary)" }}>
+                {name}
+            </div>
+            {address && (
+                <div className="text-xs truncate" style={{ color: "var(--text-muted)" }}>
+                    {address}
+                </div>
+            )}
+        </div>
+    )
+}
 
 export function SpamTable({ messages = [], selectedIds, onToggle, onToggleAll }: SpamTableProps) {
     const allSelected = messages.length > 0 && selectedIds.length === messages.length
@@ -59,8 +84,8 @@ export function SpamTable({ messages = [], selectedIds, onToggle, onToggleAll }:
                                 onChange={() => onToggle(msg.id)}
                             />
                         </td>
-                        <td className="py-3 px-2 truncate max-w-[200px]" style={{ color: "var(--text-primary)" }} title={msg.from}>
-                            {msg.from}
+                        <td className="py-3 px-2 max-w-[200px]">
+                            <Sender raw={msg.from} />
                         </td>
                         <td className="py-3 px-2 truncate max-w-[300px]" style={{ color: "var(--text-muted)" }} title={msg.subject}>
                             {msg.subject}

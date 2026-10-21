@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ShieldCheck, ShieldAlert, LogOut, Mail } from "lucide-react"
+import { ShieldCheck, ShieldAlert, LogOut, Mail, Sparkles } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useAccount } from "@/hooks/useAccount"
 import { api } from "@/api/axios.ts"
@@ -14,10 +14,27 @@ const SCOPE_LABELS: Record<string, string> = {
 }
 
 export function Settings() {
-    const { account, isLoading, hasFullDeleteAccess, hasFullDeleteScope, refetch } = useAccount()
+    const { account, isLoading, hasFullDeleteAccess, hasFullDeleteScope, aiCleanupEnabled,refetch } = useAccount()
     const [isUpgrading, setIsUpgrading] = useState(false)
     const [isToggling, setIsToggling] = useState(false)
     const navigate = useNavigate()
+    const  [isTogglingAi, setIsTogglingAi] = useState(false)
+
+
+    const handleAiToggle = async () =>{
+        setIsTogglingAi(true)
+        try{
+            await api.post("/api/ai-cleanup", {enabled: !aiCleanupEnabled})
+            await refetch()
+            toast.success(aiCleanupEnabled ? "Ai cleanup turned off" : "Ai cleanup turned on")
+        }
+        catch(err){
+            console.error("Failed to update  Ai cleanup",err)
+            toast.error("Couldn't update setting, Try again")
+        }finally {
+            setIsToggling(false)
+        }
+    }
 
     const handleUpgrade = async () => {
         setIsUpgrading(true)
@@ -149,7 +166,30 @@ export function Settings() {
                 )}
             </div>
 
-
+            <div
+                className="p-5 rounded-xl border mb-4"
+                style={{ borderColor: "var(--border)", backgroundColor: "var(--surface)" }}
+            >
+                <div className="flex items-start gap-3 mb-4">
+                    <Sparkles size={16} className="mt-0.5 shrink-0" style={{ color: aiCleanupEnabled ? "var(--success)" : "var(--text-muted)" }} />
+                    <div>
+                        <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>AI cleanup</p>
+                        <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                            {aiCleanupEnabled
+                                ? "On: Purge sends the sender, subject and a short preview of messages in your Spam folder to an open-weight AI model to decide which are junk. Your rules still run first."
+                                : "Off: Purge uses only your rules. Nothing is sent to an AI model."}
+                        </p>
+                    </div>
+                </div>
+                <button
+                    onClick={handleAiToggle}
+                    disabled={isTogglingAi}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold border transition-colors disabled:opacity-60"
+                    style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
+                >
+                    {isTogglingAi ? "Saving..." : aiCleanupEnabled ? "Turn off AI cleanup" : "Turn on AI cleanup"}
+                </button>
+            </div>
             <button
                 onClick={handleLogout}
                 className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-colors"
