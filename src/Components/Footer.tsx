@@ -1,5 +1,5 @@
-import {MessageCircle, Link} from "lucide-react";
-
+import { MessageCircle, Link as LinkIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 interface SocialLink {
     label: string
     href: string
@@ -15,7 +15,7 @@ export function Footer() {
 
     const socials: SocialLink[] = [
         { label: "GitHub", href: "https://github.com/jenissiezichi", icon: <GithubIcon /> },
-        { label: "LinkedIn", href: "https://www.linkedin.com/in/ezichijenissi", icon: <Link size={16} /> },
+        { label: "LinkedIn", href: "https://www.linkedin.com/in/ezichijenissi", icon: <LinkIcon size={16} /> },
         { label: "WhatsApp", href: "https://wa.me/2347069632334", icon: <MessageCircle size={16} /> },
 
     ]
@@ -52,6 +52,7 @@ export function Footer() {
                 <span className="text-xs" style={{ color: "var(--text-muted)" }}>
           Built by Ezichi Jenissi
         </span>
+
             <div className="flex gap-2">  {socials.map((social) => (
                 <a
                     key={social.label}
@@ -68,7 +69,26 @@ export function Footer() {
                     {social.icon}
                 </a>
             ))}</div>
+
+
           </div>
+                <div className="flex gap-4 mt-3 text-xs">
+                    <Link
+                        to="/privacy"
+                        style={{ color: "var(--text-muted)" }}
+                        className="hover:text-accent transition-colors"
+                    >
+                        Privacy Policy
+                    </Link>
+
+                    <Link
+                        to="/terms"
+                        style={{ color: "var(--text-muted)" }}
+                        className="hover:text-accent transition-colors"
+                    >
+                        Terms of Service
+                    </Link>
+                </div>
 
         </div>
 </footer>

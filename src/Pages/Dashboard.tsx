@@ -8,6 +8,7 @@ import {api} from "@/api/axios.ts"
 import {useActivity} from "@/hooks/useActivity.ts";
 import {ActivityFeed} from "@/Components/ActivityFeed.tsx";
 import {toast} from 'sonner'
+import {useStats} from "@/hooks/useStats.ts"
 
 interface ConfirmDialogProps {
     isOpen: boolean
@@ -83,11 +84,12 @@ export function ConfirmDialog({
 
 
 export function Dashboard() {
-    const { data, isLoading, error, lastUpdated, refetch } = usePollSpam()
+    const { data, isLoading, error, refetch } = usePollSpam()
     const [selectedIds, setSelectedIds] = useState<string[]>([])
     const [isTrashing, setIsTrashing] = useState(false)
     const [showConfirm, setShowConfirm] = useState<boolean>(false)
     const { activity, isLoading: isActivityLoading, refetch: refetchActivity } = useActivity()
+    const { stats, isLoading1: isStatsLoading } = useStats()
 
     const messages = data?.messages ?? []
 
@@ -133,9 +135,13 @@ export function Dashboard() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <StatCard label="Spam Detected" value={isLoading ? "…" : String(data?.count ?? 0)} icon={ShieldAlert} />
-                <StatCard label="Total Auto-Deleted" value="0" icon={Trash2} />
-                <StatCard label="Active Rules" value="0" icon={ListFilter} />
-                <StatCard label="Last Scan" value={lastUpdated ? lastUpdated.toLocaleTimeString() : "—"} icon={Clock} />
+                <StatCard label="Auto-Trashed" value={isStatsLoading ? "…" : String(stats?.total_auto_trashed ?? 0)} icon={Trash2} />
+                <StatCard label="Active Rules" value={isStatsLoading ? "…" : String(stats?.active_rules ?? 0)} icon={ListFilter} />
+                <StatCard
+                    label="Last Scan"
+                    value={stats?.last_scan_at ? new Date(stats.last_scan_at).toLocaleString([], { dateStyle: "medium", timeStyle: "short" }) : "Not yet"}
+                    icon={Clock}
+                />
             </div>
 
             <BulkActionBar
