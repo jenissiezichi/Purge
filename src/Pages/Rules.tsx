@@ -91,6 +91,7 @@ export function Rules() {
             setSenderContains("")
         } catch (err) {
             console.error("Failed to add rule", err)
+
             toast.error("Couldn't add rule. Try again.")
         } finally {
             setIsSubmitting(false)
