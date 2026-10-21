@@ -1,4 +1,4 @@
-import { Trash2, ListFilter,Plus,X } from "lucide-react"
+import { Trash2, ListFilter,Plus} from "lucide-react"
 import { useEffect, useState, useCallback } from "react"
 import { api } from "@/api/axios.ts"
 import {toast} from "sonner";
@@ -53,7 +53,7 @@ function RuleChip({ label, onRemove }: { label: string; onRemove: () => void }) 
         >
             {label}
             <button onClick={onRemove} aria-label={`Delete rule ${label}`} style={{ color: "var(--text-muted)" }}>
-                <X size={14} />
+                <Trash2 size={14} />
             </button>
         </span>
     )
