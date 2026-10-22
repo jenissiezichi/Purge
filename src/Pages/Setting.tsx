@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ShieldCheck, ShieldAlert, LogOut, Mail, Sparkles } from "lucide-react"
+import { ShieldCheck, LogOut, Mail, Sparkles } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useAccount } from "@/hooks/useAccount"
 import { api } from "@/api/axios.ts"
@@ -14,7 +14,7 @@ const SCOPE_LABELS: Record<string, string> = {
 }
 
 export function Settings() {
-    const { account, isLoading, aiCleanupEnabled,refetch } = useAccount()
+    const { account, isLoading, hasFullDeleteAccess, hasFullDeleteScope, aiCleanupEnabled,refetch } = useAccount()
     {/*const [isUpgrading, setIsUpgrading] = useState(false)*/}
     {/*  const [isToggling, setIsToggling] = useState(false)*/}
     const navigate = useNavigate()
@@ -66,6 +66,7 @@ export function Settings() {
         localStorage.removeItem("purge_token")
         localStorage.removeItem("purge_email")
         navigate("/login")
+        console.log( hasFullDeleteAccess, hasFullDeleteScope)
     }
 
     return (
