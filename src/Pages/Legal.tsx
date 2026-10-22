@@ -56,7 +56,7 @@ interface Summary {
     text:string
 }
  const Details: Summary[]= [
-     {id: 1, text: "Purge reads only the sender, subject and date of messages in your Spam folder"},
+     {id: 1, text: "Purge reads only the sender, subject, date and a short preview of messages in your Spam folder"},
      {id:2 , text: "Your data is never sold or used for advertising"},
      {id:3 , text: "Messages are moved to Trash, not deleted, unless you turn on permanent delete"},
      {id:4, text: "You can revoke Purge's access at any time in your Google account"}
@@ -95,9 +95,7 @@ export function PrivacyPage() {
                 <p>Purge asks for these Google permissions, and uses each one only for the purpose below:</p>
                 <Bullets
                     items={[
-                        "Read your emails (gmail.readonly): to list the messages in your Spam folder.",
                         "Move emails to trash (gmail.modify): to move spam that you select, or that matches your rules, to Trash.",
-                        "Permanently delete emails (mail.google.com): only if you choose to enable it in Settings. You can switch it off again in Settings.",
                         "Your email address and sign-in identity (userinfo.email and openid): to log you in.",
                     ]}
                 />
@@ -124,7 +122,7 @@ export function PrivacyPage() {
                     Your data is used only to provide Purge&apos;s features: showing your spam, applying your rules,
                     moving messages to Trash, and running an automatic scan once a day on your behalf. Purge does not
                     use your data for advertising, does not sell it, and does not use it to train machine learning
-                    models. No person reads your email through Purge.
+                    models. AI cleanup is optional and can be turned off in Settings.
                 </p>
             </Section>
 
@@ -136,6 +134,7 @@ export function PrivacyPage() {
                         "Render, which hosts the Purge backend.",
                         "Vercel, which hosts the Purge website.",
                         "GitHub Actions, which only triggers the daily scan. It does not receive your email data.",
+                        "[Groq / your AI provider], which runs an open-weight AI model (gpt-oss-20b). If AI cleanup is on, Purge sends the sender, subject and a short preview of each Spam-folder message to this model to decide whether it is junk. This data is not used to train models and is not stored by Purge."
                     ]}
                 />
                 <p>We may also disclose data if the law requires it.</p>
@@ -207,7 +206,6 @@ export function TermsPage() {
                         "Purge shows messages from your Spam folder and moves messages to Trash, when you select them or when they match rules you create.",
                         "Purge runs an automatic scan once a day and applies your rules without you being present.",
                         "Messages moved to Trash can be recovered from the Gmail Trash for about 30 days, after which Gmail removes them.",
-                        "If you enable permanent delete, deleted messages cannot be recovered. Turn this on only if you accept that.",
                     ]}
                 />
                 <p>
