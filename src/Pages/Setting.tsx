@@ -14,9 +14,9 @@ const SCOPE_LABELS: Record<string, string> = {
 }
 
 export function Settings() {
-    const { account, isLoading, hasFullDeleteAccess, hasFullDeleteScope, aiCleanupEnabled,refetch } = useAccount()
-    const [isUpgrading, setIsUpgrading] = useState(false)
-    const [isToggling, setIsToggling] = useState(false)
+    const { account, isLoading, aiCleanupEnabled,refetch } = useAccount()
+    {/*const [isUpgrading, setIsUpgrading] = useState(false)*/}
+    {/*  const [isToggling, setIsToggling] = useState(false)*/}
     const navigate = useNavigate()
     const  [isTogglingAi, setIsTogglingAi] = useState(false)
 
@@ -36,7 +36,7 @@ export function Settings() {
         }
     }
 
-    const handleUpgrade = async () => {
+    {/*  const handleUpgrade = async () => {
         setIsUpgrading(true)
         try {
             const res = await api.get("/auth/google/upgrade/permanent_delete")
@@ -46,9 +46,9 @@ export function Settings() {
             toast.error("Couldn't start the upgrade. Try again.")
             setIsUpgrading(false)
         }
-    }
+    }*/}
 
-    const handleToggle = async (turnOn: boolean) => {
+    {/* const handleToggle = async (turnOn: boolean) => {
         setIsToggling(true)
         try {
             await api.post(`/api/permanent-delete/${turnOn ? "on" : "off"}`)
@@ -61,7 +61,7 @@ export function Settings() {
             setIsToggling(false)
         }
     }
-
+*/}
     const handleLogout = () => {
         localStorage.removeItem("purge_token")
         localStorage.removeItem("purge_email")
@@ -125,7 +125,7 @@ export function Settings() {
                     </ul>
                 )}
 
-                <div className="flex items-start gap-3 mb-4 pt-3 border-t" style={{ borderColor: "var(--border)" }}>
+                {/*  <div className="flex items-start gap-3 mb-4 pt-3 border-t" style={{ borderColor: "var(--border)" }}>
                     {hasFullDeleteAccess ? (
                         <ShieldCheck size={16} className="mt-0.5 shrink-0" style={{ color: "var(--success)" }} />
                     ) : (
@@ -143,7 +143,7 @@ export function Settings() {
                                     : "Not enabled — Purge can only move spam to trash, which Gmail auto-clears after 30 days."}
                         </p>
                     </div>
-                </div>
+                </div>*/}
 
 
 {/*
