@@ -32,7 +32,7 @@ export function Settings() {
             console.error("Failed to update  Ai cleanup",err)
             toast.error("Couldn't update setting, Try again")
         }finally {
-            setIsToggling(false)
+            setIsTogglingAi(false)
         }
     }
 
