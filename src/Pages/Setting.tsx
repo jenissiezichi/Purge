@@ -145,25 +145,29 @@ export function Settings() {
                     </div>
                 </div>
 
-                {!hasFullDeleteScope ? (
-                    <button
-                        onClick={handleUpgrade}
-                        disabled={isUpgrading}
-                        className="px-4 py-2 rounded-lg text-sm font-semibold font-signature transition-colors disabled:opacity-60"
-                        style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
-                    >
-                        {isUpgrading ? "Redirecting..." : "Enable permanent delete"}
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => handleToggle(!hasFullDeleteAccess)}
-                        disabled={isToggling}
-                        className="cursor-pointer px-4 py-2 rounded-lg text-sm font-semibold font-signature border transition-colors disabled:opacity-60"
-                        style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
-                    >
-                        {isToggling ? "Saving..." : hasFullDeleteAccess ? "Turn off permanent delete" : "Turn on permanent delete"}
-                    </button>
-                )}
+
+{/*
+{!hasFullDeleteScope ? (
+    <button
+        onClick={handleUpgrade}
+        disabled={isUpgrading}
+        className="px-4 py-2 rounded-lg text-sm font-semibold font-signature transition-colors disabled:opacity-60"
+        style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
+    >
+        {isUpgrading ? "Redirecting..." : "Enable permanent delete"}
+    </button>
+) : (
+    <button
+        onClick={() => handleToggle(!hasFullDeleteAccess)}
+        disabled={isToggling}
+        className="cursor-pointer px-4 py-2 rounded-lg text-sm font-semibold font-signature border transition-colors disabled:opacity-60"
+        style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
+    >
+        {isToggling ? "Saving..." : hasFullDeleteAccess ? "Turn off permanent delete" : "Turn on permanent delete"}
+    </button>
+)}
+*/}
+                
             </div>
 
             <div
